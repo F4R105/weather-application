@@ -37,8 +37,9 @@ export const AppContextProvider = ({ children }) => {
         }
     }
 
-    const setupWeatherData = async () => {
+    const fetchWeatherData = async () => {
         try {
+            setLoading(true)
             const location = await Location.getCurrentPositionAsync();
             const lat = location.coords.latitude
             const lon = location.coords.longitude
@@ -56,6 +57,7 @@ export const AppContextProvider = ({ children }) => {
 
     const value = {
         weatherData,
+        fetchWeatherData,
         loading,
         error,
         newUser,
@@ -66,7 +68,7 @@ export const AppContextProvider = ({ children }) => {
     useEffect(()=>{
         getPermissionData()
         checkForNewUser()
-        setupWeatherData()       
+        fetchWeatherData()       
     }, [])
 
     return (

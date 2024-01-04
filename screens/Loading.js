@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import React, { useContext } from 'react'
 import globals from '../styles/global'
 import AppContext from '../contexts/AppContext'
@@ -8,7 +8,11 @@ const Loading = () => {
 
   return (
     <View style={globals.container}>
-      <Text>{error ? error : "Loading"}</Text>
+        <ActivityIndicator 
+            color={"black"} 
+            size={30} 
+        />
+        <Text>{error ? error : "Loading"}</Text>
     </View>
   )
 }

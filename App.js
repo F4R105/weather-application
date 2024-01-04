@@ -5,6 +5,7 @@ import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AppContext, { AppContextProvider } from './contexts/AppContext';
 import { Ionicons } from '@expo/vector-icons';
+import globals from './styles/global';
 
 // SCREENS
 import Home from './screens/Home';
@@ -22,10 +23,7 @@ const MyStack = () => {
       <Stack.Screen 
         name="Home" 
         component={Home} 
-        options={{
-          headerTitle: "Weather",
-          headerRight: () => (<Pressable onPress={()=>navigation.navigate('Settings')}><Ionicons name="settings" size={24} color="black" /></Pressable>)
-        }}
+        options={{headerShown: false}}
       />
       <Stack.Screen name="Settings" component={Settings} />
     </Stack.Navigator>
@@ -36,7 +34,7 @@ const Application = () => {
   const { newUser, loading } = useContext(AppContext)
   return (
     <>
-        <StatusBar style='auto' />
+        <StatusBar style='light' />
         {
           newUser ? <OnBoarding /> : 
           loading ? <Loading /> : <MyStack />
