@@ -1,0 +1,77 @@
+import { createContext, useState, useEffect } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location'
+import * as SplashScreen from 'expo-splash-screen';
+
+export default AppContext = createContext()
+
+export const AppContextProvider = ({ children }) => {
+    const [newUser, setNewUser] = useState(true)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
+    const [weatherData, setWeatherData] = useState(null)
+    const newUserKey = 'new-user'
+
+    const getPermissionData = async () => {
+        await SplashScreen.preventAutoHideAsync();
+        try {
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status === 'granted') {
+            return await SplashScreen.hideAsync();
+          }else{
+            return setError("This app needs access to your location to show you the current weather conditions and forecast for your area. Please grant the location permission to continue.")
+          }
+        }catch(error){
+          console.log(error)
+          return setError("Error getting location permission data")
+        }
+    }
+  
+    const checkForNewUser = async () => {
+        try {
+            const newUser = await AsyncStorage.getItem(newUserKey)
+            if(newUser) setNewUser(false)
+        }catch(error){
+            console.log(error)
+            return setError("Error checking for new user status")
+        }
+    }
+
+    const setupWeatherData = async () => {
+        try {
+            const location = await Location.getCurrentPositionAsync();
+            const lat = location.coords.latitude
+            const lon = location.coords.longitude
+
+            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URI}?lat=${lat}&lon=${lon}`)
+            if(response.status != 200) throw new Error()
+            const weatherData = await response.json()
+            setLoading(false)
+            setWeatherData(weatherData)
+        }catch(error){
+            console.log(error)
+            return setError("Error fetching weather data")
+        }
+    }
+
+    const value = {
+        weatherData,
+        loading,
+        error,
+        newUser,
+        setNewUser,
+        newUserKey
+    }
+
+    useEffect(()=>{
+        getPermissionData()
+        checkForNewUser()
+        setupWeatherData()       
+    }, [])
+
+    return (
+        <AppContext.Provider value={value}>
+            { children }
+        </AppContext.Provider>
+    )
+}
