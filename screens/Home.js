@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import globals from '../styles/global'
 import AppContext from '../contexts/AppContext'
-import { Ionicons, Feather } from '@expo/vector-icons';
+import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
@@ -36,6 +36,7 @@ const Home = () => {
         </TouchableOpacity>
         <View style={{width: "100%", marginTop: "auto", paddingHorizontal: 20, flexDirection: "row", justifyContent: "space-between"}}>
             <View>
+                <Feather name="sun" size={24} color="white" />
                 <Text style={[globals.text, styles.infoTitle]}>Sun</Text>
                 <View style={{flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 5}}>
                     <Feather name="sunrise" size={24} color="white" />
@@ -46,7 +47,9 @@ const Home = () => {
                     <Text  style={[globals.text]}>{weatherData?.sun.sunset}</Text>
                 </View>
             </View>
+            <View style={{width: 1, height: "50%", backgroundColor: "white", alignSelf: "center"}}></View>
             <View>
+                <Feather name="wind" size={24} color="white" />
                 <Text style={[globals.text, styles.infoTitle]}>Wind</Text>
                 <View>
 
@@ -55,7 +58,9 @@ const Home = () => {
                 <Text style={[globals.text]}>Degree: {weatherData?.wind.deg}</Text>
                 <Text style={[globals.text]}>Gust: {weatherData?.wind.gust}</Text>
             </View>
+            <View style={{width: 1, height: "50%", backgroundColor: "white", alignSelf: "center"}}></View>
             <View>
+                <MaterialCommunityIcons name="air-humidifier" size={24} color="white" />
                 <Text style={[globals.text, styles.infoTitle]}>Humidity</Text>
                 <Text style={[globals.text, styles.humidity]}>{weatherData?.humidity}</Text>
             </View>
@@ -75,7 +80,7 @@ const styles = StyleSheet.create({
     },
     header: {
         width: "100%",
-        padding: 40,
+        padding: 20,
         flexDirection: "row",
         justifyContent: "flex-end",
     },
@@ -84,7 +89,8 @@ const styles = StyleSheet.create({
     },
     country: {
         fontSize: 13,
-        textAlign: "center"
+        textAlign: "center",
+        fontWeight: "bold"
     },
     oneWeather: {
         borderColor: "white",
@@ -93,7 +99,7 @@ const styles = StyleSheet.create({
         paddingBottom: 15,
         paddingHorizontal: 8,
         elevation: 5,
-        backgroundColor: "#0000cdff"
+        backgroundColor: "#d9874fff"
     },
     weatherIcon: {
         width: 100,
@@ -107,6 +113,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     infoTitle: {
+        color: "#4393f0ff",
         fontWeight: "bold",
         marginBottom: 10
     },

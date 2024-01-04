@@ -22,7 +22,7 @@ export const AppContextProvider = ({ children }) => {
             return setError("This app needs access to your location to show you the current weather conditions and forecast for your area. Please grant the location permission to continue.")
           }
         }catch(error){
-          console.log(error)
+          console.log(error.message)
           return setError("Error getting location permission data")
         }
     }
@@ -32,7 +32,7 @@ export const AppContextProvider = ({ children }) => {
             const newUser = await AsyncStorage.getItem(newUserKey)
             if(newUser) setNewUser(false)
         }catch(error){
-            console.log(error)
+            console.log(error.message)
             return setError("Error checking for new user status")
         }
     }
@@ -50,7 +50,7 @@ export const AppContextProvider = ({ children }) => {
             setLoading(false)
             setWeatherData(weatherData)
         }catch(error){
-            console.log(error)
+            console.log(error.message)
             return setError("Error fetching weather data")
         }
     }

@@ -4,11 +4,11 @@ const globals = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#1b1c20ff",
-        backgroundColor: "white"
+        // backgroundColor: "white"
     },
     text: {
         color: "white",
-        color: "black"
+        // color: "black"
     },
     settingsBtn: {
         paddingHorizontal: 20,
