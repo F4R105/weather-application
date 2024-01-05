@@ -51,7 +51,7 @@ export const AppContextProvider = ({ children }) => {
             setWeatherData(weatherData)
         }catch(error){
             console.log(error.message)
-            return setError("Something went wrong during fetching weather data. Please check your intenet connection!..")
+            return setError("Please check your Intenet connection!..")
         }
     }
 
