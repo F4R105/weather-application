@@ -23,7 +23,7 @@ export const AppContextProvider = ({ children }) => {
           }
         }catch(error){
           console.log(error.message)
-          return setError("Error getting location permission data")
+          return setError("This app needs access to your location to show you the current weather conditions and forecast for your area. Please grant the location permission to continue.")
         }
     }
   
@@ -33,7 +33,7 @@ export const AppContextProvider = ({ children }) => {
             if(newUser) setNewUser(false)
         }catch(error){
             console.log(error.message)
-            return setError("Error checking for new user status")
+            return setError("Something went wrong")
         }
     }
 
@@ -47,11 +47,11 @@ export const AppContextProvider = ({ children }) => {
             const response = await fetch(`${process.env.EXPO_PUBLIC_API_URI}?lat=${lat}&lon=${lon}`)
             if(response.status != 200) throw new Error()
             const weatherData = await response.json()
-            setLoading(false)
+            if(!error) setLoading(false)
             setWeatherData(weatherData)
         }catch(error){
             console.log(error.message)
-            return setError("Error fetching weather data")
+            return setError("Something went wrong during fetching weather data. Please check your intenet connection!..")
         }
     }
 

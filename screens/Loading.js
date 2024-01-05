@@ -28,9 +28,11 @@ const Loading = () => {
         />
         {
           error ? (
-            <View><Feather name="alert-circle" size={24} color="black" />
-              <Feather name="alert-circle" size={30} color="red" />
-              <Text style={{color: "red"}}>{error}</Text>
+            <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+              <View style={{backgroundColor: "#355e7d", paddingHorizontal: 10, paddingVertical: 20, borderRadius: 8, alignItems: "center", gap: 20, elevation: 5, borderWidth: 1, borderColor: "#f44545"}}>
+                <Feather name="alert-circle" size={50} color="#f18b8b" />
+                <Text style={{color: "white", textAlign: "center"}}>{error}</Text>
+              </View>
             </View>
           ) : (
             <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
