@@ -33,7 +33,6 @@ const Home = () => {
   return (
     <ImageBackground source={BackgroundImage} style={[globals.container, styles.container]}>
         <LinearGradient
-            // Background Linear Gradient
             colors={['#315673ff','black']}
             locations={[.6,1]}
             style={styles.background}
