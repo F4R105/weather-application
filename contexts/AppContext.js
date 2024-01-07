@@ -44,9 +44,25 @@ export const AppContextProvider = ({ children }) => {
             const lat = location.coords.latitude
             const lon = location.coords.longitude
 
-            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URI}?lat=${lat}&lon=${lon}`)
+            const response = await fetch(`${process.env.EXPO_PUBLIC_API_URI}?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.EXPO_PUBLIC_API_KEY}`)
             if(response.status != 200) throw new Error()
-            const weatherData = await response.json()
+            const data = await response.json()
+            const {weather, main, name, sys, timezone, wind} = data
+            const {country, sunrise, sunset} = sys
+            if(country !== "TZ") return res.status(406).json({ message: "Country not supported"})
+            const weatherData = {
+                name, 
+                temp: parseInt(main.temp), 
+                weather: weather.map(weatherItem => 
+                  ({
+                    description: weatherItem.description, 
+                    icon: `${process.env.EXPO_PUBLIC_ICON_URL}/${weather[0].icon}@2x.png`
+                  })
+                ),
+                humidity: main.humidity,
+                wind,
+                sun: getSunriseAndSunsetTimes(timezone, sunrise, sunset)
+            }
             if(!error) setLoading(false)
             setWeatherData(weatherData)
         }catch(error){
