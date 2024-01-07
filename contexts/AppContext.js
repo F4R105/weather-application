@@ -37,6 +37,16 @@ export const AppContextProvider = ({ children }) => {
         }
     }
 
+    const getSunriseAndSunsetTimes = (timezone, sunrise, sunset) => {
+        const sunrise_time = new Date((sunrise + timezone) * 1000);
+        let sunset_time = new Date((sunset + timezone) * 1000);
+      
+        return {
+          sunrise: sunrise_time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          sunset: sunset_time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+    }
+
     const fetchWeatherData = async () => {
         try {
             setLoading(true)
