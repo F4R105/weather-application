@@ -2,8 +2,7 @@ import React, {useContext, useCallback, useRef, useState, useEffect} from 'react
 import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import globals from '../styles/global'
 import AppContext from '../contexts/AppContext'
-import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { EvilIcons, AntDesign, Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import funFacts from '../utils/funfacts';
@@ -12,8 +11,7 @@ const BackgroundImage = require('../assets/background_image.jpg')
 const screenHeight = Dimensions.get('screen').height;
 
 const Home = () => {
-    const { weatherData, fetchWeatherData } = useContext(AppContext)
-    const navigation = useNavigation()
+    const { weatherData, fetchWeatherData, currentTime } = useContext(AppContext)
     const [factIndex, setFactIndex] = useState(0)
 
     const sheetRef = useRef(null)
@@ -43,9 +41,16 @@ const Home = () => {
             </TouchableOpacity> */}
         </View>
         <Text style={[globals.text, styles.temperature]}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
-        <View>
-            <Text style={[globals.text, styles.region]}>{weatherData?.name}</Text>
+        <View style={{alignItems: "center"}}>
+            <View style={{position: 'relative'}}>
+                <EvilIcons name="location" size={40} color="white" style={{position: "absolute", right: -40, top: 5}} />
+                <Text style={[globals.text, styles.region]}>{weatherData?.name}</Text>
+            </View>
             <Text style={[globals.text, styles.country]}>Tanzania</Text>
+            <View style={styles.currentTime}>
+                <AntDesign name="clockcircleo" size={13} color="#f5c905" style={{position: "absolute", right: -18, top: 2.5}}/>
+                <Text style={{fontSize: 13, color: "#f5c905"}}>{currentTime}</Text>
+            </View>
         </View>
         <View style={styles.weatherContainer}>
             {
@@ -80,15 +85,15 @@ const Home = () => {
                 <View>
 
                 </View>
-                <Text style={[globals.text]}>Speed: {weatherData?.wind.speed}</Text>
-                <Text style={[globals.text]}>Degree: {weatherData?.wind.deg}</Text>
-                <Text style={[globals.text]}>Gust: {weatherData?.wind.gust}</Text>
+                <Text style={[globals.text]}>Speed: {weatherData?.wind.speed} <Text style={{fontSize: 10}}>km/h</Text></Text>
+                <Text style={[globals.text]}>Degree: {weatherData?.wind.deg} <Text style={{fontSize: 10}}>deg</Text></Text>
+                <Text style={[globals.text]}>Gust: {weatherData?.wind.gust} <Text style={{fontSize: 10}}>km/h</Text></Text>
             </View>
             <View style={{width: 1, height: "50%", backgroundColor: "white", alignSelf: "center"}}></View>
             <View>
                 <MaterialCommunityIcons name="air-humidifier" size={24} color="white" />
                 <Text style={[globals.text, styles.infoTitle]}>Humidity</Text>
-                <Text style={[globals.text, styles.humidity]}>{weatherData?.humidity}</Text>
+                <Text style={[globals.text, styles.humidity]}>{weatherData?.humidity} %</Text>
             </View>
         </View>
         <View>
@@ -145,8 +150,13 @@ const styles = StyleSheet.create({
     },
     country: {
         fontSize: 13,
-        textAlign: "center",
-        fontWeight: "bold"
+        alignSelf: "flex-start"
+        // fontWeight: "bold"
+    },
+    currentTime: {
+        position: "relative",
+        marginTop: 20,
+        gap: 5,
     },
     weatherContainer:{
         flexDirection: "row",
