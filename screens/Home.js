@@ -35,15 +35,21 @@ const Home = () => {
             locations={[.6,1]}
             style={styles.background}
         />
+
+        {/* HEADER */}
         <View style={styles.header}>
-            {/* <TouchableOpacity onPress={()=>navigation.navigate('Settings')} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
+            <TouchableOpacity onPress={()=>navigation.navigate('Settings')} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
                 <Ionicons name="settings" size={25} color="white" />
-            </TouchableOpacity> */}
+            </TouchableOpacity>
         </View>
+
+        {/* TEMPERATURE & TIME*/}
         <Text style={[globals.text, styles.temperature]}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
+
+        {/* LOCATION */}
         <View style={{alignItems: "center"}}>
             <View style={{position: 'relative'}}>
-                <EvilIcons name="location" size={40} color="white" style={{position: "absolute", right: -40, top: 5}} />
+                <EvilIcons name="location" size={40} color="white" style={{position: "absolute", left: -40, top: "50%", transform: [{translateY: -17}]}} />
                 <Text style={[globals.text, styles.region]}>{weatherData?.name}</Text>
             </View>
             <Text style={[globals.text, styles.country]}>Tanzania</Text>
@@ -52,6 +58,8 @@ const Home = () => {
                 <Text style={{fontSize: 13, color: "#f5c905"}}>{currentTime}</Text>
             </View>
         </View>
+
+        {/* WEATHER IMAGES */}
         <View style={styles.weatherContainer}>
             {
                 weatherData?.weather.map(item => (
@@ -62,9 +70,13 @@ const Home = () => {
                 ))
             }
         </View>
+
+        {/* REFRESH BUTTON */}
         <TouchableOpacity onPress={fetchWeatherData} style={styles.refreshBtn}>
             <Ionicons name="refresh-outline" size={24} color="white" />
         </TouchableOpacity>
+
+        {/* WEATHER EXTRA INFO */}
         <View style={{width: "100%", marginTop: "auto", paddingHorizontal: 20, flexDirection: "row", justifyContent: "space-between"}}>
             <View>
                 <Feather name="sun" size={24} color="white" />
@@ -96,11 +108,17 @@ const Home = () => {
                 <Text style={[globals.text, styles.humidity]}>{weatherData?.humidity} %</Text>
             </View>
         </View>
+
+
+        {/* FUN FACT */}
         <View>
             <TouchableOpacity style={styles.funFactBtn} onPress={()=>{setRandomFactIndex(); handleSnapPress(0)}}>
                 <Text style={globals.text}>Fun fact</Text>
             </TouchableOpacity>
         </View>
+
+
+        {/* BOTTOM SHEET */}
         <BottomSheet
             ref={sheetRef}
             index={-1}
@@ -120,7 +138,7 @@ export default Home
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: "center",
+        // justifyContent: "center",
         alignItems: "center",
         paddingVertical: 50,
         resizeMode: "cover",
@@ -146,11 +164,12 @@ const styles = StyleSheet.create({
     },
     region: {
         fontSize: 30,
-        fontWeight: "bold"
+        fontWeight: "bold",
+        paddingVertical: 5
     },
     country: {
         fontSize: 13,
-        alignSelf: "flex-start"
+        // alignSelf: "flex-start"
         // fontWeight: "bold"
     },
     currentTime: {

@@ -110,7 +110,7 @@ export const AppContextProvider = ({ children }) => {
       await SplashScreen.preventAutoHideAsync();
       await getPermissionData()   
       await checkForNewUser()
-        await SplashScreen.hideAsync()
+      await SplashScreen.hideAsync()
       await fetchWeatherData()
     }
 
