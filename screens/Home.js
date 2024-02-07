@@ -6,11 +6,14 @@ import { EvilIcons, AntDesign, Ionicons, Feather, MaterialCommunityIcons } from 
 import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import funFacts from '../utils/funfacts';
+import { useNavigation } from '@react-navigation/native';
 
 const BackgroundImage = require('../assets/background_image.jpg')
 const screenHeight = Dimensions.get('screen').height;
 
 const Home = () => {
+    const navigation = useNavigation()
+    
     const { weatherData, fetchWeatherData, currentTime } = useContext(AppContext)
     const [factIndex, setFactIndex] = useState(0)
 
