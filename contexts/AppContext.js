@@ -95,19 +95,23 @@ export const AppContextProvider = ({ children }) => {
 
 
     const getPermissionData = async () => {
-        await SplashScreen.preventAutoHideAsync();
         try {
           let { status } = await Location.requestForegroundPermissionsAsync();
-          if (status === 'granted') {
-            await SplashScreen.hideAsync()
-            return
-          }else{
-            return setError("This app needs access to your location to show you the current weather conditions and forecast for your area. Please grant the location permission to continue.")
+          if (status !== 'granted') {
+            return setError("This app needs access to your location to show you the current weather conditions and forecast for your area. Please grant the location permission on your phone settings to continue.")
           }
         }catch(error){
           console.log('error while requesting for permission: ', error.message)
           return setError("This app needs access to your location to show you the current weather conditions and forecast for your area. Please grant the location permission to continue.")
         }
+    }
+
+    const prepareApp = async () => {
+      await SplashScreen.preventAutoHideAsync();
+      await getPermissionData()   
+      await checkForNewUser()
+        await SplashScreen.hideAsync()
+      await fetchWeatherData()
     }
 
     const value = {
@@ -122,9 +126,7 @@ export const AppContextProvider = ({ children }) => {
     }
 
     useEffect(()=>{
-        getPermissionData()   
-        checkForNewUser()
-        fetchWeatherData()
+      prepareApp()
     }, [])
 
     return (
