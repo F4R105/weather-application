@@ -59,10 +59,9 @@ export const AppContextProvider = ({ children }) => {
       }
     }
 
-    const fetchWeatherData = async () => {
+    const fetchWeatherData = async (lat, lon) => {
         try {
             setLoading(true)
-            const { lat, lon } = await getCurrentLocationData()
 
             // console.log('getting weather data', 'lat -> ', lat, ', lon -> ', lon)
             const response = await fetch(`${process.env.EXPO_PUBLIC_API_URI}?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.EXPO_PUBLIC_API_KEY}`)
@@ -114,14 +113,17 @@ export const AppContextProvider = ({ children }) => {
       await getPermissionData()   
       await checkForNewUser()
       await SplashScreen.hideAsync()
-      await fetchWeatherData()
+      const { lat, lon } = await getCurrentLocationData()
+      await fetchWeatherData(lat, lon)
     }
 
     const value = {
         weatherData,
         fetchWeatherData,
+        getCurrentLocationData,
         loading,
         error,
+        setError,
         newUser,
         setNewUser,
         newUserKey,

@@ -6,17 +6,37 @@ import AppContext from '../contexts/AppContext';
 import { EvilIcons, Entypo } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet';
 import tanzaniaRegions from "../utils/regions"
+import { useNavigation } from '@react-navigation/native';
 
 const screenHeight = Dimensions.get('screen').height;
 
 const Region = ({ item }) => {
+  const navigation = useNavigation()
+  const { fetchWeatherData, setError } = useContext(AppContext)
+
+  const getOtherLocationGeoData = async (city) => {
+    try {
+      const response = await fetch(`${process.env.EXPO_PUBLIC_GEOCODE_URI}?q=${city}&limit=1&appid=${process.env.EXPO_PUBLIC_API_KEY}`)
+      if(response.status != 200) throw new Error("Something went wrong while getting geocode data")
+      const geoData = await response.json()
+      const {lat, lon} = geoData[0]
+      await fetchWeatherData(lat, lon)
+      navigation.navigate('Home')
+    }catch(error){
+      console.log('error while fetching geodata: ', error.message)
+      return setError(`Sorry, Something went wrong!..`)
+    }
+  }
+
   return (
-    <Text style={styles.region}>{item}</Text>
+    <TouchableOpacity onPress={() => getOtherLocationGeoData(item)}>
+      <Text style={styles.region}>{item}</Text>
+    </TouchableOpacity>
   )
 }
 
 const Settings = () => {
-  const { weatherData, fetchWeatherData, currentTime } = useContext(AppContext)
+  const { weatherData, currentTime } = useContext(AppContext)
   const [isOpen, setIsOpen] = useState(false)
   const sheetRef = useRef(null)
   const snapPoints = ["70%"]
@@ -106,10 +126,9 @@ const Settings = () => {
         enablePanDownToClose={true}
         onClose={()=>setIsOpen(false)}
         style={styles.bottomSheet}
-        backgroundStyle="red"
       >
         <View>
-          <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 15}}>Tanzania regions</Text>
+          <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 15, color: "#355e7d"}}>Tanzania regions</Text>
         </View>
           
         <BottomSheetFlatList
@@ -117,7 +136,6 @@ const Settings = () => {
           keyExtractor={item => item}
           renderItem={({item}) => <Region item={item} />}
           style={{paddingVertical: 20}}
-          backgroundStyle="red"
         />
       </BottomSheet>
     </View>
@@ -173,7 +191,8 @@ const styles = StyleSheet.create({
   },
   bottomSheet: {
     paddingHorizontal: 20,
-    paddingVertical:30
+    paddingVertical:30,
+    elevation: 5
   },
   region: {
     paddingVertical: 10

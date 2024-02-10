@@ -14,7 +14,7 @@ const screenHeight = Dimensions.get('screen').height;
 const Home = () => {
     const navigation = useNavigation()
     
-    const { weatherData, fetchWeatherData, currentTime } = useContext(AppContext)
+    const { weatherData, fetchWeatherData, currentTime, getCurrentLocationData } = useContext(AppContext)
     const [factIndex, setFactIndex] = useState(0)
     const [favourite, setFavourite] = useState(false)
 
@@ -87,7 +87,13 @@ const Home = () => {
         </View>
 
         {/* REFRESH BUTTON */}
-        <TouchableOpacity onPress={fetchWeatherData} style={styles.refreshBtn}>
+        <TouchableOpacity
+            style={styles.refreshBtn}
+            onPress={async () => {
+                const { lat, lon } = await getCurrentLocationData()
+                fetchWeatherData(lat, lon)
+            }} 
+        >
             <Ionicons name="refresh-outline" size={24} color="white" />
         </TouchableOpacity>
 
