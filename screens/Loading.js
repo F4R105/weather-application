@@ -19,7 +19,7 @@ const Loading = () => {
     },[])
 
   return (
-    <View style={[globals.container, styles.container]}>
+    <View style={styles.container}>
         <LinearGradient
             // Background Linear Gradient
             colors={['#315673ff','black']}
@@ -37,15 +37,16 @@ const Loading = () => {
           ) : (
             <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
               <Image source={AppIcon} style={styles.appicon}/>
-              <Text style={{textAlign: "center", color: "white"}}>{funFacts[factIndex]}</Text>
+              <Text style={{textAlign: "center", color: "white", paddingHorizontal: 10}}>{funFacts[factIndex]}</Text>
             </View>
           )
         }
-        <View style={{marginTop: 'auto', alignItems: "center", gap: 50}}>
+        <View style={{height: 100, justifyContent: "center", alignItems: "center"}}>
           {
             !error && (
-              <View style={{flexDirection: "row"}}>
+              <View style={{height: 60}}>
                 <BallIndicator color={"white"} size={25} />
+                <Text style={{color: "white", fontSize: 12}}>Loading...</Text>
               </View>
             )
           }
@@ -58,8 +59,7 @@ export default Loading
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 50,
-    paddingHorizontal: 20
+    flex: 1
   },
   background: {
     position: 'absolute',

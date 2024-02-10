@@ -30,7 +30,8 @@ export const AppContextProvider = ({ children }) => {
             if(newUser) setNewUser(false)
         }catch(error){
             console.log('error while checking for new user: ', error.message)
-            return setError("Something went wrong")
+            setError("Something went wrong")
+            return await SplashScreen.hideAsync()
         }
     }
 
@@ -53,7 +54,8 @@ export const AppContextProvider = ({ children }) => {
         return {lat,lon}
       }catch(error){
         console.log("error getting current location", error.message)
-        return setError("Something went wrong")
+        setError("Something went wrong")
+        return await SplashScreen.hideAsync()
       }
     }
 
@@ -89,7 +91,8 @@ export const AppContextProvider = ({ children }) => {
             setWeatherData(weatherData)
         }catch(error){
             console.log('error while fetching weather: ', error.message)
-            return setError(`Sorry, Something went wrong!..`)
+            setError(`Sorry, Something went wrong!..`)
+            return await SplashScreen.hideAsync()
         }
     }
 

@@ -2,7 +2,7 @@ import React, {useContext, useCallback, useRef, useState, useEffect} from 'react
 import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import globals from '../styles/global'
 import AppContext from '../contexts/AppContext'
-import { EvilIcons, AntDesign, Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { EvilIcons, AntDesign, Ionicons, Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import funFacts from '../utils/funfacts';
@@ -42,24 +42,32 @@ const Home = () => {
         {/* HEADER */}
         <View style={styles.header}>
             <TouchableOpacity onPress={()=>navigation.navigate('Settings')} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
-                <Ionicons name="settings" size={25} color="white" />
+                <MaterialIcons name="favorite" size={26} color="#f18b8b" />
+                {/* <MaterialIcons name="favorite-outline" size={26} color="white" /> */}
             </TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>navigation.navigate('Settings')} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
+                <Feather name="menu" size={25} color="white" />
+            </TouchableOpacity>
+        </View>
+
+
+        {/* LOCATION */}
+        <View style={{alignItems: "center"}}>
+            <View style={{position: 'relative'}}>
+                <EvilIcons name="location" size={40} color="white" style={{position: "absolute", left: -40, top: "80%", transform: [{translateY: -17}]}} />
+                <Text style={[globals.text, styles.region]}>{weatherData?.name}</Text>
+            </View>
+            <Text style={[globals.text, styles.country]}>Tanzania</Text>
         </View>
 
         {/* TEMPERATURE & TIME*/}
         <Text style={[globals.text, styles.temperature]}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
 
-        {/* LOCATION */}
-        <View style={{alignItems: "center"}}>
-            <View style={{position: 'relative'}}>
-                <EvilIcons name="location" size={40} color="white" style={{position: "absolute", left: -40, top: "50%", transform: [{translateY: -17}]}} />
-                <Text style={[globals.text, styles.region]}>{weatherData?.name}</Text>
-            </View>
-            <Text style={[globals.text, styles.country]}>Tanzania</Text>
-            <View style={styles.currentTime}>
-                <AntDesign name="clockcircleo" size={13} color="#f5c905" style={{position: "absolute", right: -18, top: 2.5}}/>
-                <Text style={{fontSize: 13, color: "#f5c905"}}>{currentTime}</Text>
-            </View>
+        {/* TIME FOR WEATHER DATA */}
+        <View style={styles.currentTime}>
+            <AntDesign name="clockcircleo" size={10} color="#f5c905"/>
+            <Text style={{fontSize: 13, color: "#f5c905"}}>{currentTime}</Text>
         </View>
 
         {/* WEATHER IMAGES */}
@@ -68,7 +76,7 @@ const Home = () => {
                 weatherData?.weather.map(item => (
                     <View key={item.description} style={styles.oneWeather}>
                         <Image source={{uri: item.icon}} style={styles.weatherIcon}  />
-                        <Text style={[globals.text, styles.description]}>{weatherData?.weather[0].description}</Text>
+                        <Text style={[globals.text, styles.description]}>{item.description}</Text>
                     </View>
                 ))
             }
@@ -97,9 +105,6 @@ const Home = () => {
             <View>
                 <Feather name="wind" size={24} color="white" />
                 <Text style={[globals.text, styles.infoTitle]}>Wind</Text>
-                <View>
-
-                </View>
                 <Text style={[globals.text]}>Speed: {weatherData?.wind.speed} <Text style={{fontSize: 10}}>km/h</Text></Text>
                 <Text style={[globals.text]}>Degree: {weatherData?.wind.deg} <Text style={{fontSize: 10}}>deg</Text></Text>
                 <Text style={[globals.text]}>Gust: {weatherData?.wind.gust} <Text style={{fontSize: 10}}>km/h</Text></Text>
@@ -158,26 +163,26 @@ const styles = StyleSheet.create({
     header: {
         width: "100%",
         padding: 20,
+        gap: 10,
         flexDirection: "row",
         justifyContent: "flex-end",
     },
     temperature: {
-        fontSize: 100,
+        fontSize: 80,
         fontWeight: "bold",
+        paddingVertical: 20
     },
     region: {
-        fontSize: 30,
+        fontSize: 25,
         fontWeight: "bold",
-        paddingVertical: 5
+        // paddingVertical: 5
     },
     country: {
         fontSize: 13,
-        // alignSelf: "flex-start"
-        // fontWeight: "bold"
     },
     currentTime: {
         position: "relative",
-        marginTop: 20,
+        alignItems: "center",
         gap: 5,
     },
     weatherContainer:{
