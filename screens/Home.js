@@ -16,6 +16,7 @@ const Home = () => {
     
     const { weatherData, fetchWeatherData, currentTime } = useContext(AppContext)
     const [factIndex, setFactIndex] = useState(0)
+    const [favourite, setFavourite] = useState(false)
 
     const sheetRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
@@ -41,9 +42,12 @@ const Home = () => {
 
         {/* HEADER */}
         <View style={styles.header}>
-            <TouchableOpacity onPress={()=>navigation.navigate('Settings')} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
-                <MaterialIcons name="favorite" size={26} color="#f18b8b" />
-                {/* <MaterialIcons name="favorite-outline" size={26} color="white" /> */}
+            <TouchableOpacity onPress={()=>setFavourite(index => !index)} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
+                {favourite ? (
+                    <MaterialIcons name="favorite" size={26} color="#f18b8b" />
+                ): (
+                    <MaterialIcons name="favorite-outline" size={26} color="white" />
+                )}
             </TouchableOpacity>
 
             <TouchableOpacity onPress={()=>navigation.navigate('Settings')} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
@@ -56,7 +60,7 @@ const Home = () => {
         <View style={{alignItems: "center"}}>
             <View style={{position: 'relative'}}>
                 <EvilIcons name="location" size={40} color="white" style={{position: "absolute", left: -40, top: "80%", transform: [{translateY: -17}]}} />
-                <Text style={[globals.text, styles.region]}>{weatherData?.name}</Text>
+                <Text style={[globals.text, styles.region]} numberOfLines={1}>{weatherData?.name}</Text>
             </View>
             <Text style={[globals.text, styles.country]}>Tanzania</Text>
         </View>

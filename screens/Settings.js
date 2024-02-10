@@ -4,10 +4,16 @@ import globals from '../styles/global'
 import { LinearGradient } from 'expo-linear-gradient'
 import AppContext from '../contexts/AppContext';
 import { EvilIcons, Entypo } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
-
+import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet';
+import tanzaniaRegions from "../utils/regions"
 
 const screenHeight = Dimensions.get('screen').height;
+
+const Region = ({ item }) => {
+  return (
+    <Text style={styles.region}>{item}</Text>
+  )
+}
 
 const Settings = () => {
   const { weatherData, fetchWeatherData, currentTime } = useContext(AppContext)
@@ -36,9 +42,9 @@ const Settings = () => {
           <View style={{justifyContent: "center", padding: 10}}>
             <View style={{flexDirection: "row", alignItems: "center"}}>
               <EvilIcons name="location" size={23} color="white" />
-              <Text style={{fontSize: 20, fontWeight: "bold", color: "white"}}>{weatherData?.name}</Text>
+              <Text style={{fontSize: 20, fontWeight: "bold", color: "white"}} numberOfLines={1}>{weatherData?.name}</Text>
             </View>
-            <Text style={{color: "white", fontSize: 10}}>{weatherData?.name}, Tanzania</Text>
+            <Text style={{color: "white", fontSize: 10}} numberOfLines={1}>{weatherData?.name}, Tanzania</Text>
             <Text style={{color: "white", fontSize: 10}}>Time: {currentTime}</Text>
           </View>
           <View style={{justifyContent: "center", backgroundColor: "#9dbbd1", padding: 20}}>
@@ -99,10 +105,20 @@ const Settings = () => {
         snapPoints={snapPoints}
         enablePanDownToClose={true}
         onClose={()=>setIsOpen(false)}
+        style={styles.bottomSheet}
+        backgroundStyle="red"
       >
-          <BottomSheetView style={{padding: 30}}>
-              <Text style={{fontSize: 20,textAlign: "center", color: "#315673ff"}}>Hello world</Text>
-          </BottomSheetView>
+        <View>
+          <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 15}}>Tanzania regions</Text>
+        </View>
+          
+        <BottomSheetFlatList
+          data={tanzaniaRegions}
+          keyExtractor={item => item}
+          renderItem={({item}) => <Region item={item} />}
+          style={{paddingVertical: 20}}
+          backgroundStyle="red"
+        />
       </BottomSheet>
     </View>
 
@@ -154,5 +170,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center"
+  },
+  bottomSheet: {
+    paddingHorizontal: 20,
+    paddingVertical:30
+  },
+  region: {
+    paddingVertical: 10
   }
 })
