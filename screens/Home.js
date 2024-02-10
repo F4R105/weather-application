@@ -2,19 +2,21 @@ import React, {useContext, useCallback, useRef, useState, useEffect} from 'react
 import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, ScrollView } from 'react-native'
 import globals from '../styles/global'
 import AppContext from '../contexts/AppContext'
-import { Ionicons, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { EvilIcons, AntDesign, Ionicons, Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import funFacts from '../utils/funfacts';
+import { useNavigation } from '@react-navigation/native';
 
 const BackgroundImage = require('../assets/background_image.jpg')
 const screenHeight = Dimensions.get('screen').height;
 
 const Home = () => {
-    const { weatherData, fetchWeatherData } = useContext(AppContext)
     const navigation = useNavigation()
+    
+    const { weatherData, fetchWeatherData, currentTime, getCurrentLocationData } = useContext(AppContext)
     const [factIndex, setFactIndex] = useState(0)
+    const [favourite, setFavourite] = useState(false)
 
     const sheetRef = useRef(null)
     const [isOpen, setIsOpen] = useState(false)
@@ -37,29 +39,65 @@ const Home = () => {
             locations={[.6,1]}
             style={styles.background}
         />
+
+        {/* HEADER */}
         <View style={styles.header}>
-            {/* <TouchableOpacity onPress={()=>navigation.navigate('Settings')} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
-                <Ionicons name="settings" size={25} color="white" />
-            </TouchableOpacity> */}
+            <TouchableOpacity onPress={()=>setFavourite(index => !index)} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
+                {favourite ? (
+                    <MaterialIcons name="favorite" size={26} color="#f18b8b" />
+                ): (
+                    <MaterialIcons name="favorite-outline" size={26} color="white" />
+                )}
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>navigation.navigate('Settings')} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
+                <Feather name="menu" size={25} color="white" />
+            </TouchableOpacity>
         </View>
-        <Text style={[globals.text, styles.temperature]}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
-        <View>
-            <Text style={[globals.text, styles.region]}>{weatherData?.name}</Text>
+
+
+        {/* LOCATION */}
+        <View style={{alignItems: "center"}}>
+            <View style={{position: 'relative'}}>
+                <EvilIcons name="location" size={40} color="white" style={{position: "absolute", left: -40, top: "80%", transform: [{translateY: -17}]}} />
+                <Text style={[globals.text, styles.region]} numberOfLines={1}>{weatherData?.name}</Text>
+            </View>
             <Text style={[globals.text, styles.country]}>Tanzania</Text>
         </View>
+
+        {/* TEMPERATURE & TIME*/}
+        <Text style={[globals.text, styles.temperature]}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
+
+        {/* TIME FOR WEATHER DATA */}
+        <View style={styles.currentTime}>
+            <AntDesign name="clockcircleo" size={10} color="#f5c905"/>
+            <Text style={{fontSize: 13, color: "#f5c905"}}>{currentTime}</Text>
+        </View>
+
+        {/* WEATHER IMAGES */}
         <View style={styles.weatherContainer}>
             {
                 weatherData?.weather.map(item => (
                     <View key={item.description} style={styles.oneWeather}>
                         <Image source={{uri: item.icon}} style={styles.weatherIcon}  />
-                        <Text style={[globals.text, styles.description]}>{weatherData?.weather[0].description}</Text>
+                        <Text style={[globals.text, styles.description]}>{item.description}</Text>
                     </View>
                 ))
             }
         </View>
-        <TouchableOpacity onPress={fetchWeatherData} style={styles.refreshBtn}>
+
+        {/* REFRESH BUTTON */}
+        <TouchableOpacity
+            style={styles.refreshBtn}
+            onPress={async () => {
+                const { lat, lon } = await getCurrentLocationData()
+                fetchWeatherData(lat, lon)
+            }} 
+        >
             <Ionicons name="refresh-outline" size={24} color="white" />
         </TouchableOpacity>
+
+        {/* WEATHER EXTRA INFO */}
         <View style={{width: "100%", marginTop: "auto", paddingHorizontal: 20, flexDirection: "row", justifyContent: "space-between"}}>
             <View>
                 <Feather name="sun" size={24} color="white" />
@@ -77,25 +115,28 @@ const Home = () => {
             <View>
                 <Feather name="wind" size={24} color="white" />
                 <Text style={[globals.text, styles.infoTitle]}>Wind</Text>
-                <View>
-
-                </View>
-                <Text style={[globals.text]}>Speed: {weatherData?.wind.speed}</Text>
-                <Text style={[globals.text]}>Degree: {weatherData?.wind.deg}</Text>
-                <Text style={[globals.text]}>Gust: {weatherData?.wind.gust}</Text>
+                <Text style={[globals.text]}>Speed: {weatherData?.wind.speed} <Text style={{fontSize: 10}}>km/h</Text></Text>
+                <Text style={[globals.text]}>Degree: {weatherData?.wind.deg} <Text style={{fontSize: 10}}>deg</Text></Text>
+                <Text style={[globals.text]}>Gust: {weatherData?.wind.gust} <Text style={{fontSize: 10}}>km/h</Text></Text>
             </View>
             <View style={{width: 1, height: "50%", backgroundColor: "white", alignSelf: "center"}}></View>
             <View>
                 <MaterialCommunityIcons name="air-humidifier" size={24} color="white" />
                 <Text style={[globals.text, styles.infoTitle]}>Humidity</Text>
-                <Text style={[globals.text, styles.humidity]}>{weatherData?.humidity}</Text>
+                <Text style={[globals.text, styles.humidity]}>{weatherData?.humidity} %</Text>
             </View>
         </View>
+
+
+        {/* FUN FACT */}
         <View>
             <TouchableOpacity style={styles.funFactBtn} onPress={()=>{setRandomFactIndex(); handleSnapPress(0)}}>
                 <Text style={globals.text}>Fun fact</Text>
             </TouchableOpacity>
         </View>
+
+
+        {/* BOTTOM SHEET */}
         <BottomSheet
             ref={sheetRef}
             index={-1}
@@ -115,7 +156,7 @@ export default Home
 
 const styles = StyleSheet.create({
     container: {
-        justifyContent: "center",
+        // justifyContent: "center",
         alignItems: "center",
         paddingVertical: 50,
         resizeMode: "cover",
@@ -132,21 +173,27 @@ const styles = StyleSheet.create({
     header: {
         width: "100%",
         padding: 20,
+        gap: 10,
         flexDirection: "row",
         justifyContent: "flex-end",
     },
     temperature: {
-        fontSize: 100,
+        fontSize: 80,
         fontWeight: "bold",
+        paddingVertical: 20
     },
     region: {
-        fontSize: 30,
-        fontWeight: "bold"
+        fontSize: 25,
+        fontWeight: "bold",
+        // paddingVertical: 5
     },
     country: {
         fontSize: 13,
-        textAlign: "center",
-        fontWeight: "bold"
+    },
+    currentTime: {
+        position: "relative",
+        alignItems: "center",
+        gap: 5,
     },
     weatherContainer:{
         flexDirection: "row",
@@ -165,7 +212,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 2,
         paddingBottom: 15,
         elevation: 5,
-        backgroundColor: "#4393f0ff"
+        backgroundColor: "#4393f0ff",
     },
     weatherIcon: {
         width: 100,
