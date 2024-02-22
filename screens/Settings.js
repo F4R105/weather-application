@@ -125,7 +125,7 @@ const Settings = () => {
         </View>
           
         <BottomSheetFlatList
-          data={tanzaniaRegions}
+          data={tanzaniaRegions.sort()}
           keyExtractor={item => item}
           renderItem={({item}) => <Region item={item} />}
           style={{paddingVertical: 20}}
