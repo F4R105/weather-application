@@ -1,12 +1,12 @@
 import React, { useContext, useState, useRef, useCallback } from 'react'
-import { Dimensions, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { Dimensions, StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native'
 import globals from '../styles/global'
-import { LinearGradient } from 'expo-linear-gradient'
 import AppContext from '../contexts/AppContext';
-import { EvilIcons, Entypo } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetFlatList, BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import tanzaniaRegions from "../utils/regions"
 import { useNavigation } from '@react-navigation/native';
+
+import { EvilIcons, Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -48,13 +48,6 @@ const Settings = () => {
 
   return (
     <View style={[globals.container, styles.container]}>
-      {/* GRADIENT */}
-      <LinearGradient
-          colors={['white','black']}
-          locations={[.6,1]}
-          style={styles.background}
-      />
-
       {/* YOUR LOCATION */}
       <View>
         <Text style={styles.sectionHeader}>Your location</Text>
@@ -74,46 +67,46 @@ const Settings = () => {
         </View>
       </View>
 
-      {/* OTHER LOCATION */}
-      <View>
-        <Text style={styles.sectionHeader}>Your other favourite location</Text>
-        <View style={[styles.card, styles.fav]}>
-          <View>
-            <View style={{flexDirection: "row", alignItems: "center"}}>
-              <EvilIcons name="location" size={23} color="black" />
-              <Text style={{fontSize: 20, fontWeight: "bold", color: "black"}}>{weatherData?.name}</Text>
+      {/* FAVOURITE LOCATION */}
+      <View style={{flex: 1}}>
+        <Text style={styles.sectionHeader}>Your other favourite locations</Text>
+        <ScrollView style={{display: "none"}}>
+          {new Array(8).fill(null).map( (fav, index) => (
+            <View style={[styles.card, styles.fav]} key={index}>
+              <View>
+                <View style={{flexDirection: "row", alignItems: "center"}}>
+                  <EvilIcons name="location" size={23} color="black" />
+                  <Text style={{fontSize: 20, fontWeight: "bold", color: "black"}}>{weatherData?.name}</Text>
+                </View>
+                <Text style={{color: "black", fontSize: 10}}>{weatherData?.name}, Tanzania</Text>
+                <Text style={{color: "black", fontSize: 10}}>Time: {currentTime}</Text>
+              </View>
+              <View style={{justifyContent: "center"}}>
+                <Text style={{fontSize: 25, fontWeight: "bold", color: "black"}}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
+                <Text style={{color: "black", fontSize: 10}}>{weatherData?.weather[0].description}</Text>
+              </View>
             </View>
-            <Text style={{color: "black", fontSize: 10}}>{weatherData?.name}, Tanzania</Text>
-            <Text style={{color: "black", fontSize: 10}}>Time: {currentTime}</Text>
+          ))}
+        </ScrollView>
+        <View style={styles.empty}>
+          <View style={{flexDirection: "row", alignItems: "center", alignSelf: "center"}}>
+            <Ionicons name="alert" size={24} color="gray" />
+            <Text style={{color: "gray"}}>You don't have favourite locations yet</Text>
           </View>
-          <View style={{justifyContent: "center"}}>
-            <Text style={{fontSize: 25, fontWeight: "bold", color: "black"}}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
-            <Text style={{color: "black", fontSize: 10}}>{weatherData?.weather[0].description}</Text>
-          </View>
-        </View>
-        <View style={[styles.card, styles.fav]}>
-          <View>
-            <View style={{flexDirection: "row", alignItems: "center"}}>
-              <EvilIcons name="location" size={23} color="black" />
-              <Text style={{fontSize: 20, fontWeight: "bold", color: "black"}}>{weatherData?.name}</Text>
-            </View>
-            <Text style={{color: "black", fontSize: 10}}>{weatherData?.name}, Tanzania</Text>
-            <Text style={{color: "black", fontSize: 10}}>Time: {currentTime}</Text>
-          </View>
-          <View style={{justifyContent: "center"}}>
-            <Text style={{fontSize: 25, fontWeight: "bold", color: "black"}}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
-            <Text style={{color: "black", fontSize: 10}}>{weatherData?.weather[0].description}</Text>
+          <View style={{gap: 5, alignSelf: "center", alignItems: "center", marginTop: 20, opacity: .2}}>
+            <MaterialIcons name="favorite-outline" size={20} color="black" />
+            <Text style={{fontSize: 10, width: 100, textAlign: "center"}}>Press the icon on home screen to add location to your favourites</Text>
           </View>
         </View>
       </View>
 
       {/* OTHER LOCATION */}
       <View>
-        <Text style={styles.sectionHeader}>Other location</Text>
+        <Text style={styles.sectionHeader}>Other locations</Text>
         <View style={styles.addLocation}>
           <TouchableOpacity style={{alignItems: "center"}} onPress={()=>{handleSnapPress(0)}}>
             <Entypo name="add-to-list" size={25} color="black" />
-            <Text style={{fontSize: 12}}>Add location</Text>
+            <Text style={{fontSize: 12}}>Tanzania regions</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -149,7 +142,6 @@ export default Settings
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#315673ff",
     padding: 20,
     gap: 20
   },
@@ -163,7 +155,7 @@ const styles = StyleSheet.create({
   },
   sectionHeader: {
     fontWeight: "bold",
-    marginBottom: 5
+    paddingVertical: 5
   },
   card: {
     marginTop: 5,
@@ -177,17 +169,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 15,
     // backgroundColor: "#9dbbd1"
-    backgroundColor: "transparent",
-    borderColor: "#9dbbd1",
-    borderWidth: 2
+    backgroundColor: "white",
+    // borderColor: "#9dbbd1",
+    // borderWidth: 2,
+    marginBottom: 5
+  },
+  empty: {
+    // borderColor: "#9dbbd1",
+    // borderWidth: 2,
+    // borderStyle: "dashed",
+    minHeight: "30%",
+    justifyContent: "center",
+    // alignItems: "center"
   },
   addLocation: {
     borderColor: "#9dbbd1",
     borderWidth: 2,
+    borderStyle: "dashed",
     height: 80,
     borderRadius: 5,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: "white"
   },
   bottomSheet: {
     paddingHorizontal: 20,
