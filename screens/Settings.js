@@ -5,8 +5,10 @@ import AppContext from '../contexts/AppContext';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import tanzaniaRegions from "../utils/regions"
 import { useNavigation } from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
-import { EvilIcons, Entypo, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { EvilIcons, Entypo } from '@expo/vector-icons';
+import FavLocations from '../components/FavLocations';
 
 const screenHeight = Dimensions.get('screen').height;
 
@@ -48,6 +50,9 @@ const Settings = () => {
 
   return (
     <View style={[globals.container, styles.container]}>
+
+      <Toast />
+
       {/* YOUR LOCATION */}
       <View>
         <Text style={styles.sectionHeader}>Your location</Text>
@@ -68,37 +73,7 @@ const Settings = () => {
       </View>
 
       {/* FAVOURITE LOCATION */}
-      <View style={{flex: 1}}>
-        <Text style={styles.sectionHeader}>Your other favourite locations</Text>
-        <ScrollView style={{display: "none"}}>
-          {new Array(8).fill(null).map( (fav, index) => (
-            <View style={[styles.card, styles.fav]} key={index}>
-              <View>
-                <View style={{flexDirection: "row", alignItems: "center"}}>
-                  <EvilIcons name="location" size={23} color="black" />
-                  <Text style={{fontSize: 20, fontWeight: "bold", color: "black"}}>{weatherData?.name}</Text>
-                </View>
-                <Text style={{color: "black", fontSize: 10}}>{weatherData?.name}, Tanzania</Text>
-                <Text style={{color: "black", fontSize: 10}}>Time: {currentTime}</Text>
-              </View>
-              <View style={{justifyContent: "center"}}>
-                <Text style={{fontSize: 25, fontWeight: "bold", color: "black"}}>{weatherData?.temp}{String.fromCharCode(176)}c</Text>
-                <Text style={{color: "black", fontSize: 10}}>{weatherData?.weather[0].description}</Text>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
-        <View style={styles.empty}>
-          <View style={{flexDirection: "row", alignItems: "center", alignSelf: "center"}}>
-            <Ionicons name="alert" size={24} color="gray" />
-            <Text style={{color: "gray"}}>You don't have favourite locations yet</Text>
-          </View>
-          <View style={{gap: 5, alignSelf: "center", alignItems: "center", marginTop: 20, opacity: .2}}>
-            <MaterialIcons name="favorite-outline" size={20} color="black" />
-            <Text style={{fontSize: 10, width: 100, textAlign: "center"}}>Press the icon on home screen to add location to your favourites</Text>
-          </View>
-        </View>
-      </View>
+      <FavLocations />
 
       {/* OTHER LOCATION */}
       <View>
@@ -164,23 +139,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#355e7d",
     borderRadius: 10,
     overflow: "hidden"
-  },
-  fav: {
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    // backgroundColor: "#9dbbd1"
-    backgroundColor: "white",
-    // borderColor: "#9dbbd1",
-    // borderWidth: 2,
-    marginBottom: 5
-  },
-  empty: {
-    // borderColor: "#9dbbd1",
-    // borderWidth: 2,
-    // borderStyle: "dashed",
-    minHeight: "30%",
-    justifyContent: "center",
-    // alignItems: "center"
   },
   addLocation: {
     borderColor: "#9dbbd1",

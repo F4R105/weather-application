@@ -7,6 +7,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import funFacts from '../utils/funfacts';
 import { useNavigation } from '@react-navigation/native';
+import * as STORAGE from '../utils/asyncStorage'
+import Toast from 'react-native-toast-message';
 
 const BackgroundImage = require('../assets/background_image.jpg')
 const screenHeight = Dimensions.get('screen').height;
@@ -42,7 +44,13 @@ const Home = () => {
 
         {/* HEADER */}
         <View style={styles.header}>
-            <TouchableOpacity onPress={()=>setFavourite(index => !index)} style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}>
+            <TouchableOpacity 
+                onPress={()=>{
+                    (favourite) ? STORAGE.removeLocationFromStorage() : STORAGE.addLocationToStorage()
+                    setFavourite(index => !index)
+                }} 
+                style={{width: 35, height: 35, borderRadius: 5, justifyContent: "center", alignItems: "center"}}
+            >
                 {favourite ? (
                     <MaterialIcons name="favorite" size={26} color="#f18b8b" />
                 ): (
@@ -55,6 +63,7 @@ const Home = () => {
             </TouchableOpacity>
         </View>
 
+        <Toast />
 
         {/* LOCATION */}
         <View style={{alignItems: "center"}}>
@@ -202,7 +211,7 @@ const styles = StyleSheet.create({
         width: "100%", 
         minHeight: 150,
         padding: 10, 
-        marginTop: 50, 
+        marginTop: 15, 
     },
     oneWeather: {
         maxWidth: 100,
