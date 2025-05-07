@@ -30,7 +30,7 @@ const FavLocations = () => {
     return (
         <View style={{flex: 1}}>
         <View style={{flexDirection: "row", alignItems: "center", justifyContent: "space-between"}}>
-            <Text style={styles.sectionHeader}>Your other favourite locations</Text>
+            <Text style={styles.sectionHeader}>Your favourite locations</Text>
             <TouchableOpacity>
                 <Text>Clear all</Text>
             </TouchableOpacity>
